@@ -1,0 +1,102 @@
+{
+  "categories": {
+    "ai": {
+      "label": "AI / NEURAL",
+      "emoji": "🤖",
+      "enabled": true,
+      "keywords": ["llm", "gpt", "claude", "gemini", "model", "agent", "inference", "transformer", "neural", "ai", "ml"]
+    },
+    "code": {
+      "label": "CODE / SYSTEMS",
+      "emoji": "⚡",
+      "enabled": true,
+      "keywords": ["python", "rust", "go", "linux", "kernel", "database", "postgres", "sqlite", "docker", "k8s", "compiler"]
+    },
+    "sec": {
+      "label": "NETSEC / EXPLOIT",
+      "emoji": "🛡",
+      "enabled": true,
+      "keywords": ["cve", "vulnerability", "exploit", "ransomware", "zero-day", "breach", "security", "auth", "cryptography"]
+    },
+    "hardware": {
+      "label": "HARDWARE / INDIE",
+      "emoji": "🔌",
+      "enabled": true,
+      "keywords": ["gpu", "nvidia", "amd", "risc-v", "arm", "fpga", "chip", "pcb", "self-hosted", "homelab"]
+    },
+    "space_sci": {
+      "label": "SPACE / SCIENCE",
+      "emoji": "🛰",
+      "enabled": true,
+      "keywords": ["spacex", "starship", "nasa", "esa", "orbit", "quantum", "fusion", "physics", "jwst", "telescope", "mars", "rocket"]
+    }
+  },
+  "hackernews": {
+    "enabled": true,
+    "limit": 40,
+    "min_score": 50
+  },
+  "reddit": {
+    "enabled": true,
+    "min_score": 40,
+    "limit_per_sub": 12,
+    "subreddits": [
+      {"name": "LocalLLaMA", "category": "ai", "enabled": true},
+      {"name": "MachineLearning", "category": "ai", "enabled": true},
+      {"name": "programming", "category": "code", "enabled": true},
+      {"name": "devops", "category": "code", "enabled": true},
+      {"name": "netsec", "category": "sec", "enabled": true},
+      {"name": "hardware", "category": "hardware", "enabled": true},
+      {"name": "space", "category": "space_sci", "enabled": true},
+      {"name": "science", "category": "space_sci", "enabled": true}
+    ]
+  },
+  "github": {
+    "enabled": true,
+    "min_stars": 80,
+    "limit": 15,
+    "queries": [
+      "topic:llm created:>={since_date}",
+      "topic:ai-agents created:>={since_date}",
+      "stars:>150 pushed:>={since_date}"
+    ]
+  },
+  "rss": [
+    {
+      "name": "Lobste.rs",
+      "url": "https://lobste.rs/rss",
+      "category": "code",
+      "enabled": true
+    },
+    {
+      "name": "Simon Willison",
+      "url": "https://simonwillison.net/atom/everything/",
+      "category": "ai",
+      "enabled": true
+    },
+    {
+      "name": "Krebs on Security",
+      "url": "https://krebsonsecurity.com/feed/",
+      "category": "sec",
+      "enabled": true
+    },
+    {
+      "name": "Quanta Magazine",
+      "url": "https://api.quantamagazine.org/feed/",
+      "category": "space_sci",
+      "enabled": true
+    },
+    {
+      "name": "Spaceflight Now",
+      "url": "https://spaceflightnow.com/feed/",
+      "category": "space_sci",
+      "enabled": true
+    },
+    {
+      "name": "Ars Technica",
+      "url": "https://feeds.arstechnica.com/arstechnica/technology-lab",
+      "category": "hardware",
+      "enabled": true
+    }
+  ]
+}
