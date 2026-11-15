@@ -75,6 +75,7 @@ class GeminiRouter:
         candidates: list[NewsItem],
         categories_cfg: dict[str, Any],
         top_n: int,
+        recent_titles: list[str] | None = None,
     ) -> tuple[list[SelectedItem], str]:
         """Step 1: pick top_n non-duplicate high-signal items from candidates."""
         cat_desc = ", ".join(
@@ -102,8 +103,16 @@ class GeminiRouter:
             f"Active categories: {cat_desc}. "
             'Return strict JSON: {"selected": [{"uid": "...", "category": "...", "reason": "short"}]}'
         )
+        recent_block = ""
+        if recent_titles:
+            recent_block = (
+                "\nRecently covered topics (DO NOT select stories about the same events):\n"
+                + json.dumps(recent_titles[:25], ensure_ascii=False)
+                + "\n"
+            )
         user_prompt = (
             f"Pick up to {top_n} best items from these {len(compact_list)} candidates:\n"
+            + recent_block
             + json.dumps(compact_list, ensure_ascii=False)
         )
 

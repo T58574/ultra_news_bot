@@ -58,7 +58,7 @@
     "queries": [
       "topic:llm created:>={since_date}",
       "topic:ai-agents created:>={since_date}",
-      "stars:>150 pushed:>={since_date}"
+      "stars:>150 created:>={since_date}"
     ]
   },
   "rss": [

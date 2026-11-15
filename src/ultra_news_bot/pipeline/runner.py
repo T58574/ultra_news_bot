@@ -76,10 +76,12 @@ async def run_digest_pipeline(settings: Settings, db: BotDatabase) -> DigestPayl
             )
 
         router = GeminiRouter(settings, db)
+        recent_titles = db.get_recent_titles(hours=72, limit=25)
         selected_meta, used_filter_model = await router.select_top_items(
             candidates,
             categories_cfg=categories_cfg,
             top_n=settings.top_items_to_summarize,
+            recent_titles=recent_titles,
         )
         by_uid = {item.uid: item for item in candidates}
         selected_items: list[NewsItem] = []

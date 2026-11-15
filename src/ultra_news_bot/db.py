@@ -2,7 +2,7 @@
 
 import json
 import sqlite3
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -72,6 +72,20 @@ class BotDatabase:
         with self._connect() as conn:
             row = conn.execute("SELECT COUNT(*) AS cnt FROM seen_urls").fetchone()
             return int(row["cnt"]) if row else 0
+
+    def get_recent_titles(self, hours: int = 72, limit: int = 100) -> list[str]:
+        cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT title FROM seen_urls
+                WHERE seen_at >= ?
+                ORDER BY seen_at DESC
+                LIMIT ?
+                """,
+                (cutoff, limit),
+            ).fetchall()
+            return [str(row["title"]) for row in rows]
 
     def record_llm_call(self, model: str) -> None:
         day = datetime.now(timezone.utc).strftime("%Y-%m-%d")

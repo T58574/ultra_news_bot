@@ -2,6 +2,7 @@
 
 import math
 import re
+from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -77,15 +78,49 @@ def _compute_rank(item: NewsItem, categories_cfg: dict[str, Any], now: datetime)
     return round(engagement + freshness + kw_bonus, 3)
 
 
+def _balance_by_category(items: list[NewsItem], max_candidates: int) -> list[NewsItem]:
+    """Interleave top items across categories so one noisy topic cannot crowd out others."""
+    buckets: dict[str, list[NewsItem]] = defaultdict(list)
+    for item in items:
+        buckets[item.category].append(item)
+
+    for bucket in buckets.values():
+        bucket.sort(key=lambda x: x.rank_score, reverse=True)
+
+    # Order categories by their strongest item first
+    cat_order = sorted(
+        buckets.keys(),
+        key=lambda c: buckets[c][0].rank_score,
+        reverse=True,
+    )
+
+    balanced: list[NewsItem] = []
+    idx = 0
+    while len(balanced) < max_candidates:
+        added_in_round = False
+        for cat in cat_order:
+            bucket = buckets[cat]
+            if idx < len(bucket):
+                balanced.append(bucket[idx])
+                added_in_round = True
+                if len(balanced) >= max_candidates:
+                    break
+        if not added_in_round:
+            break
+        idx += 1
+    return balanced
+
+
 def deduplicate_and_rank(
     items: list[NewsItem],
     categories_cfg: dict[str, Any],
     db: BotDatabase,
     max_candidates: int = 70,
 ) -> list[NewsItem]:
-    """Filter seen URLs, collapse duplicates, score, and cap candidates for LLM."""
+    """Filter seen URLs, collapse duplicates (batch + 72h history), score, and balance."""
     now = datetime.now(timezone.utc)
     enabled_cats = {k for k, v in categories_cfg.items() if v.get("enabled", True)}
+    recent_tokens = [_title_tokens(t) for t in db.get_recent_titles(hours=72)]
 
     seen_urls_in_batch: set[str] = set()
     kept_tokens: list[set[str]] = []
@@ -97,7 +132,9 @@ def deduplicate_and_rank(
             continue
 
         tokens = _title_tokens(item.title)
-        if any(_jaccard(tokens, prev) >= 0.72 for prev in kept_tokens):
+        if any(_jaccard(tokens, prev) >= 0.65 for prev in kept_tokens):
+            continue
+        if any(_jaccard(tokens, prev) >= 0.65 for prev in recent_tokens):
             continue
 
         item.rank_score = _compute_rank(item, categories_cfg, now)
@@ -108,5 +145,4 @@ def deduplicate_and_rank(
         kept_tokens.append(tokens)
         unique_items.append(item)
 
-    unique_items.sort(key=lambda x: x.rank_score, reverse=True)
-    return unique_items[:max_candidates]
+    return _balance_by_category(unique_items, max_candidates)
