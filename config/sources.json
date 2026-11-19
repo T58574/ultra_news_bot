@@ -1,58 +1,76 @@
 {
   "categories": {
     "ai": {
-      "label": "AI / NEURAL",
+      "label": "AI / PRODUCTS",
       "emoji": "🤖",
       "enabled": true,
-      "keywords": ["llm", "gpt", "claude", "gemini", "model", "agent", "inference", "transformer", "neural", "ai", "ml"]
+      "keywords": ["gemini", "gpt", "claude", "openai", "anthropic", "google", "ai", "agent", "model", "assistant", "multimodal", "chatbot"]
+    },
+    "ux_product": {
+      "label": "UX / DESIGN / PRODUCT",
+      "emoji": "🎨",
+      "enabled": true,
+      "keywords": ["ux", "ui", "design", "product", "research", "usability", "onboarding", "conversion", "retention", "figma", "interface", "user", "launch"]
+    },
+    "tech_biz": {
+      "label": "BIG TECH / MARKETING",
+      "emoji": "📈",
+      "enabled": true,
+      "keywords": ["apple", "meta", "microsoft", "amazon", "startup", "growth", "marketing", "monetization", "pricing", "subscription", "market", "tiktok", "youtube", "ad"]
     },
     "code": {
-      "label": "CODE / SYSTEMS",
-      "emoji": "⚡",
+      "label": "WEB / PLATFORMS",
+      "emoji": "🌐",
       "enabled": true,
-      "keywords": ["python", "rust", "go", "linux", "kernel", "database", "postgres", "sqlite", "docker", "k8s", "compiler"]
-    },
-    "sec": {
-      "label": "NETSEC / EXPLOIT",
-      "emoji": "🛡",
-      "enabled": true,
-      "keywords": ["cve", "vulnerability", "exploit", "ransomware", "zero-day", "breach", "security", "auth", "cryptography"]
+      "keywords": ["web", "browser", "chrome", "ios", "android", "app", "platform", "update", "feature", "social", "search"]
     },
     "hardware": {
-      "label": "HARDWARE / INDIE",
-      "emoji": "🔌",
+      "label": "GADGETS / DEVICES",
+      "emoji": "📱",
       "enabled": true,
-      "keywords": ["gpu", "nvidia", "amd", "risc-v", "arm", "fpga", "chip", "pcb", "self-hosted", "homelab"]
+      "keywords": ["iphone", "pixel", "mac", "vr", "ar", "wearable", "robot", "drone", "camera", "device", "glasses", "smart"]
     },
     "space_sci": {
       "label": "SPACE / SCIENCE",
       "emoji": "🛰",
       "enabled": true,
       "keywords": ["spacex", "starship", "nasa", "esa", "orbit", "quantum", "fusion", "physics", "jwst", "telescope", "mars", "rocket"]
+    },
+    "sec": {
+      "label": "PRIVACY / SECURITY",
+      "emoji": "🛡",
+      "enabled": false,
+      "keywords": ["privacy", "breach", "scam", "phishing", "deepfake", "regulation", "gdpr", "antitrust"]
     }
   },
   "hackernews": {
     "enabled": true,
-    "limit": 40,
-    "min_score": 50
+    "limit": 25,
+    "min_score": 120
   },
   "reddit": {
     "enabled": true,
     "min_score": 40,
     "limit_per_sub": 12,
     "subreddits": [
-      {"name": "LocalLLaMA", "category": "ai", "enabled": true},
-      {"name": "MachineLearning", "category": "ai", "enabled": true},
-      {"name": "programming", "category": "code", "enabled": true},
-      {"name": "devops", "category": "code", "enabled": true},
-      {"name": "netsec", "category": "sec", "enabled": true},
-      {"name": "hardware", "category": "hardware", "enabled": true},
+      {"name": "artificial", "category": "ai", "enabled": true},
+      {"name": "UXDesign", "category": "ux_product", "enabled": true},
+      {"name": "ProductManagement", "category": "ux_product", "enabled": true},
+      {"name": "marketing", "category": "tech_biz", "enabled": true},
+      {"name": "technology", "category": "tech_biz", "enabled": true},
+      {"name": "gadgets", "category": "hardware", "enabled": true},
       {"name": "space", "category": "space_sci", "enabled": true},
-      {"name": "science", "category": "space_sci", "enabled": true}
+      {"name": "science", "category": "space_sci", "enabled": true},
+      {"name": "LocalLLaMA", "category": "ai", "enabled": false},
+      {"name": "MachineLearning", "category": "ai", "enabled": false},
+      {"name": "programming", "category": "code", "enabled": false},
+      {"name": "devops", "category": "code", "enabled": false},
+      {"name": "netsec", "category": "sec", "enabled": false},
+      {"name": "hardware", "category": "hardware", "enabled": false}
     ]
   },
   "github": {
-    "enabled": true,
+    "enabled": false,
     "min_stars": 80,
     "limit": 15,
     "queries": [
@@ -63,21 +81,45 @@
   },
   "rss": [
     {
-      "name": "Lobste.rs",
-      "url": "https://lobste.rs/rss",
-      "category": "code",
-      "enabled": true
-    },
-    {
-      "name": "Simon Willison",
-      "url": "https://simonwillison.net/atom/everything/",
+      "name": "Google Blog",
+      "url": "https://blog.google/rss/",
       "category": "ai",
       "enabled": true
     },
     {
-      "name": "Krebs on Security",
-      "url": "https://krebsonsecurity.com/feed/",
-      "category": "sec",
+      "name": "OpenAI News",
+      "url": "https://openai.com/news/rss.xml",
+      "category": "ai",
+      "enabled": true
+    },
+    {
+      "name": "NN/g UX Research",
+      "url": "https://www.nngroup.com/feed/rss/",
+      "category": "ux_product",
+      "enabled": true
+    },
+    {
+      "name": "UX Collective",
+      "url": "https://uxdesign.cc/feed",
+      "category": "ux_product",
+      "enabled": true
+    },
+    {
+      "name": "Product Hunt",
+      "url": "https://www.producthunt.com/feed",
+      "category": "ux_product",
+      "enabled": true
+    },
+    {
+      "name": "TechCrunch",
+      "url": "https://techcrunch.com/feed/",
+      "category": "tech_biz",
+      "enabled": true
+    },
+    {
+      "name": "The Verge",
+      "url": "https://www.theverge.com/rss/index.xml",
+      "category": "tech_biz",
       "enabled": true
     },
     {
@@ -97,6 +139,24 @@
       "url": "https://feeds.arstechnica.com/arstechnica/technology-lab",
       "category": "hardware",
       "enabled": true
+    },
+    {
+      "name": "Lobste.rs",
+      "url": "https://lobste.rs/rss",
+      "category": "code",
+      "enabled": false
+    },
+    {
+      "name": "Simon Willison",
+      "url": "https://simonwillison.net/atom/everything/",
+      "category": "ai",
+      "enabled": false
+    },
+    {
+      "name": "Krebs on Security",
+      "url": "https://krebsonsecurity.com/feed/",
+      "category": "sec",
+      "enabled": false
     }
   ]
 }

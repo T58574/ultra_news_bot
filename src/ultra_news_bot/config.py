@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     )
 
     telegram_bot_token: str = Field(default="", alias="TELEGRAM_BOT_TOKEN")
+    telegram_channel_id: str = Field(default="", alias="TELEGRAM_CHANNEL_ID")
     allowed_user_ids_raw: str = Field(default="", alias="ALLOWED_USER_IDS")
 
     google_api_key: str = Field(default="", alias="GOOGLE_API_KEY")
@@ -28,9 +29,16 @@ class Settings(BaseSettings):
         default="gemini-3.5-flash-lite", alias="GEMINI_SUMMARY_MODEL"
     )
     gemini_fallback_models_raw: str = Field(
-        default="gemini-3.1-flash-lite,gemini-2.5-flash-lite",
+        default=(
+            "gemini-3.5-flash-lite,gemini-3.1-flash-lite,"
+            "gemini-3.5-flash,gemini-3.6-flash,"
+            "gemini-2.5-flash,gemini-2.5-flash-lite"
+        ),
         alias="GEMINI_FALLBACK_MODELS",
     )
+    gemini_max_attempts: int = Field(default=5, alias="GEMINI_MAX_ATTEMPTS")
+    gemini_backoff_base_seconds: float = Field(default=10.0, alias="GEMINI_BACKOFF_BASE_SECONDS")
+    gemini_backoff_max_seconds: float = Field(default=90.0, alias="GEMINI_BACKOFF_MAX_SECONDS")
 
     github_token: str = Field(default="", alias="GITHUB_TOKEN")
 
@@ -54,6 +62,11 @@ class Settings(BaseSettings):
             if part.isdigit():
                 ids.add(int(part))
         return ids
+
+    @property
+    def digest_target_chat_id(self) -> str | None:
+        target = self.telegram_channel_id.strip()
+        return target or None
 
     @property
     def gemini_fallback_models(self) -> list[str]:

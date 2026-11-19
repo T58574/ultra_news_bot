@@ -18,11 +18,18 @@ def render_digest_messages(
     candidates_sent: int,
     model_filter: str,
     model_summary: str,
+    edition_label: str = "",
 ) -> list[str]:
     """Render digest entries into Telegram-safe HTML messages."""
     ts_str = created_at.strftime("%d.%m // %H:%M")
+    edition_line = (
+        f"<code>&gt; MODE: {html.escape(edition_label)}</code>\n"
+        if edition_label
+        else ""
+    )
     header = (
         f"⚡ <b>[ NETRUNNER // FEED :: {html.escape(ts_str)} ]</b>\n"
+        f"{edition_line}"
         f"<code>&gt; SCAN: {total_scanned} | POOL: {candidates_sent} | "
         f"TOP: {len(entries)}</code>\n"
         f"<code>&gt; CORE: {html.escape(model_filter)} -&gt; {html.escape(model_summary)}</code>\n"
@@ -48,6 +55,7 @@ def render_digest_messages(
         for entry in cat_entries:
             headline = html.escape(entry.headline)
             summary = html.escape(entry.summary)
+            insight = html.escape(entry.insight.strip()) if entry.insight else ""
             src_label = html.escape(entry.source_label)
             url = html.escape(entry.url, quote=True)
 
@@ -56,9 +64,10 @@ def render_digest_messages(
                 disc_url = html.escape(entry.discussion_url, quote=True)
                 links.append(f'<a href="{disc_url}">тред</a>')
 
+            insight_line = f"\n<i>Инсайт: {insight}</i>" if insight else ""
             card = (
                 f"▸ <b>{headline}</b>\n"
-                f"<blockquote>{summary}</blockquote>\n"
+                f"<blockquote>{summary}</blockquote>{insight_line}\n"
                 f"└─ <code>{{ {src_label} }}</code> • {' • '.join(links)}"
             )
             blocks.append(card)

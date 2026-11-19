@@ -37,3 +37,33 @@ def test_formatter_escapes_html_and_splits_long_digests() -> None:
     assert all(len(msg) <= MAX_MESSAGE_LEN for msg in messages)
     assert "&lt;v0&gt; &amp; benchmarks" in messages[0]
     assert "NETRUNNER // FEED" in messages[0]
+
+
+def test_formatter_renders_insight_and_edition_label() -> None:
+    cats = {"ux_product": {"label": "UX / DESIGN / PRODUCT", "emoji": "🎨", "enabled": True}}
+    entries = [
+        DigestEntry(
+            uid="id:1",
+            category="ux_product",
+            headline="New onboarding flow",
+            summary="Company redesigned signup.",
+            insight="Упрощение первого шага поднимает конверсию.",
+            source_label="NN/g: RSS",
+            url="https://example.com/1",
+        )
+    ]
+
+    messages = render_digest_messages(
+        entries=entries,
+        categories_cfg=cats,
+        created_at=datetime(2026, 11, 15, 9, 0, tzinfo=timezone.utc),
+        total_scanned=20,
+        candidates_sent=10,
+        model_filter="gemini-3.1-flash-lite",
+        model_summary="gemini-3.5-flash-lite",
+        edition_label="MORNING // LAUNCHES & AI",
+    )
+
+    assert len(messages) == 1
+    assert "MODE: MORNING // LAUNCHES &amp; AI" in messages[0]
+    assert "<i>Инсайт: Упрощение первого шага поднимает конверсию.</i>" in messages[0]

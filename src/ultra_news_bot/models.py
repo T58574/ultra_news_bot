@@ -43,6 +43,7 @@ class DigestEntry(BaseModel):
     category: str
     headline: str
     summary: str
+    insight: str = ""
     source_label: str
     url: str
     discussion_url: Optional[str] = None
@@ -60,3 +61,4 @@ class DigestPayload(BaseModel):
     cover_image_url: Optional[str] = None
     entries: list[DigestEntry] = Field(default_factory=list)
     rendered_messages: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)

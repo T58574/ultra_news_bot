@@ -1,0 +1,11 @@
+[Unit]
+Description=Ultra News Bot (One-Shot Netrunner Telegram Digest)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=PROJECT_ROOT
+ExecStart=PROJECT_ROOT/.venv/bin/ultra-news-bot
+StandardOutput=journal
+StandardError=journal

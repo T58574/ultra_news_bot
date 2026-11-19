@@ -1,5 +1,5 @@
-"""Telegram bot UI, handlers, and scheduler."""
+"""One-shot Telegram digest delivery entrypoint."""
 
-from .app import main
+from .app import main, run_once
 
-__all__ = ["main"]
+__all__ = ["main", "run_once"]

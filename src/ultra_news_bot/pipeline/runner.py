@@ -3,6 +3,7 @@
 import asyncio
 import logging
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import httpx
 
@@ -55,16 +56,31 @@ async def run_digest_pipeline(settings: Settings, db: BotDatabase) -> DigestPayl
             max_candidates=settings.max_candidates_for_llm,
         )
 
-        now = datetime.now(timezone.utc)
+        now_local = datetime.now(ZoneInfo(settings.timezone))
+        now = now_local.astimezone(timezone.utc)
+        if now_local.hour < 15:
+            edition_label = "MORNING // LAUNCHES & AI"
+            edition_focus = (
+                "Morning edition: prioritize fresh product launches, AI releases, "
+                "Big Tech moves, and market news."
+            )
+        else:
+            edition_label = "EVENING // UX & DEEP DIVES"
+            edition_focus = (
+                "Evening edition: prioritize UX/UI research, product case studies, "
+                "marketing insights, gadgets, and science."
+            )
+
         if not candidates:
             messages = render_digest_messages(
                 entries=[],
                 categories_cfg=categories_cfg,
-                created_at=now,
+                created_at=now_local,
                 total_scanned=len(all_items),
                 candidates_sent=0,
                 model_filter=settings.gemini_filter_model,
                 model_summary=settings.gemini_summary_model,
+                edition_label=edition_label,
             )
             return DigestPayload(
                 created_at=now,
@@ -82,6 +98,7 @@ async def run_digest_pipeline(settings: Settings, db: BotDatabase) -> DigestPayl
             categories_cfg=categories_cfg,
             top_n=settings.top_items_to_summarize,
             recent_titles=recent_titles,
+            edition_focus=edition_focus,
         )
         by_uid = {item.uid: item for item in candidates}
         selected_items: list[NewsItem] = []
@@ -101,11 +118,12 @@ async def run_digest_pipeline(settings: Settings, db: BotDatabase) -> DigestPayl
         messages = render_digest_messages(
             entries=entries,
             categories_cfg=categories_cfg,
-            created_at=now,
+            created_at=now_local,
             total_scanned=len(all_items),
             candidates_sent=len(candidates),
             model_filter=used_filter_model,
             model_summary=used_summary_model,
+            edition_label=edition_label,
         )
 
         db.mark_seen([(normalize_url(item.url), item.title) for item in selected_items])
@@ -126,4 +144,5 @@ async def run_digest_pipeline(settings: Settings, db: BotDatabase) -> DigestPayl
             cover_image_url=cover_image_url,
             entries=entries,
             rendered_messages=messages,
+            warnings=router.warnings,
         )

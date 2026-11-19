@@ -1,0 +1,11 @@
+[Unit]
+Description=Schedule Ultra News Bot (Morning & Evening Digests)
+
+[Timer]
+OnCalendar=*-*-* 09:00:00
+OnCalendar=*-*-* 20:00:00
+Persistent=true
+Unit=ultra-news-bot.service
+
+[Install]
+WantedBy=timers.target
